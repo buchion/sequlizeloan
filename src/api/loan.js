@@ -1,35 +1,23 @@
-const express = require("express")
-const passport = require("passport")
+const express = require('express');
+const passport = require('passport');
 
-const router = express.Router()
+const router = express.Router();
 
-router.get(
-	"/loan",
-	passport.authenticate("jwt", { session: false }),
-	(req, res) => {
-		res.send()
-	}
-)
+const User = require('../models/user');
+const Loan = require('../models/loan');
 
-router.post("/loan", async (req, res) => {
-	const { email, password } = req.body
 
-	if (!userWithEmail)
-		return res
-			.status(400)
-			.json({ message: "Email or password does not match!" })
+router.post('/loan', async (req, res) => {
+  const { loan_amount, user_id, loan_status } = req.body;
 
-	if (userWithEmail.password !== password)
-		return res
-			.status(400)
-			.json({ message: "Email or password does not match!" })
+  const newLoan = new Loan({ loan_amount, user_id, loan_status });
 
-	const jwtToken = jwt.sign(
-		{ id: userWithEmail.id, email: userWithEmail.email },
-		process.env.JWT_SECRET
-	)
+  const savedLoan = await newLoan.save().catch((err) => {
+    console.log('Error: ', err);
+    res.status(500).json({ error: 'Cannot Request Loans at the moment!' });
+  });
 
-	res.json({ message: "Welcome Back!", token: jwtToken })
-})
+  if (savedLoan) res.json({ message: 'New Loan Created', savedLoan });
+});
 
-module.exports = router
+module.exports = router;

@@ -3,7 +3,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../database');
 
 const Loan = sequelize.define('Loan', {
-  id: {
+  user_id: {
     type: DataTypes.UUID,
     primaryKey: true,
     defaultValue: DataTypes.UUIDV4,
@@ -14,7 +14,7 @@ const Loan = sequelize.define('Loan', {
     type: DataTypes.NUMBER,
     allowNull: false,
   },
-  status: {
+  loan_status: {
     type: DataTypes.ENUM,
     values: ['Approved', 'Rejected', 'First Stage', 'Pending'],
   }
